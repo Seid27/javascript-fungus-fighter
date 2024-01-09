@@ -22,51 +22,71 @@ function onReady() {
     // - Rendered to the DOM
 }
 
-function render() {
+function disableButtons(){
+    let attackBtns = document.getElementsByClassName('attack-btn');
+    // console.log(attackBtns);
+    for (const btn of attackBtns) {
+        btn.disabled = true;
+        console.log(btn);
+        // console.log(btn.onclick);
+    }
+}
 
-    //attack
+function render() {
     const apText = document.getElementById('ap-text');
     const attackProgress = document.getElementById('ap-meter');
-    apText.textContent = attackPoint > 0? attackPoint : 0;
-    attackProgress.value = attackPoint > 0? attackPoint : 0;
-
-    //enemy
+    const fungusWalk = document.getElementById('fungus-walk');
     const hpText = document.getElementById('hp-text');
     const hpMeter = document.getElementById('hp-meter');
+
+    //attack
+    apText.textContent = attackPoint > 0? attackPoint : 0;
+    attackProgress.value = attackPoint > 0? attackPoint : 0;
+    // console.log(attackPoint < fungusHP && attackPoint === 0);
+    if(attackPoint < fungusHP && attackPoint < 0){
+        // console.log(fungusWalk);
+        fungusWalk.classList.remove('walk');
+        fungusWalk.classList.add('jump');
+        disableButtons();
+        // console.log(fungusWalk);
+    }
+
+    //enemy
     hpText.textContent = fungusHP > 0? fungusHP : 0;
     hpMeter.value = fungusHP > 0? fungusHP : 0;
-
-
-
-    
+    if(fungusHP < attackPoint && fungusHP < 0){
+        // console.log(fungusWalk);
+        fungusWalk.classList.remove('walk');
+        fungusWalk.classList.add('dead');
+        disableButtons();
+        // console.log(fungusWalk);
+    }
 }
 function calcAttackPoint(event) {
     // console.log(event.target);
     if(event.target.classList[1] === 'arcane-scepter'){
         attackPoint -= 12;
         fungusHP -= 14;
-        render();
-
     }
     else if(event.target.classList[1] === 'entangle'){
         attackPoint -= 23;
         fungusHP -= 9;
-        render();
 
     }
     else if(event.target.classList[1] === 'dragon-blade'){
         attackPoint -= 38;
         fungusHP -= 47;
-        render();
 
     }
     else if(event.target.classList[1] === 'star-fire'){
         attackPoint -= 33;
         fungusHP -= 25;
-        render();
 
     }
-    // console.log(attackPoint, fungusHP);
+    
+    console.log(attackPoint, fungusHP);
+    render();
+    
 }
 
 
